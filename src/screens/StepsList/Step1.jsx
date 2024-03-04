@@ -34,7 +34,7 @@ function Step1() {
     setStepsListData(prevState => ({
       ...prevState,
       list: [
-        ...(prevState.list ?? {}),
+        ...prevState.list,
         {
           key,
           todo,
@@ -45,11 +45,11 @@ function Step1() {
   };
 
   const handleDeleteTodo = key => {
-    setStepsListData(prevData => prevData.filter(item => item.key !== key));
+    setStepsListData(prevState => ({
+      ...prevState,
+      list: prevState.list.filter(item => item.key !== key),
+    }));
   };
-  useEffect(() => {
-    console.log(stepsListData);
-  }, [stepsListData]);
 
   const renderItem = ({item, drag, isActive, index}) => {
     return (
@@ -109,7 +109,12 @@ function Step1() {
         <View style={{flex: 1}}>
           <DraggableFlatList
             data={stepsListData.list ?? []}
-            onDragEnd={({data}) => setStepsListData(data)}
+            onDragEnd={({data}) =>
+              setStepsListData(prevState => ({
+                ...prevState,
+                list: data,
+              }))
+            }
             keyExtractor={item => item.key}
             renderItem={renderItem}
           />

@@ -26,6 +26,7 @@ interface DataProviderProps {
 export const StepsListProvider: React.FC<DataProviderProps> = ({children}) => {
   const [stepsListData, setStepsListData] = useState<StepsListProps>({
     step: 1,
+    list: [],
   } as StepsListProps);
 
   return (
