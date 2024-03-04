@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   ListItem,
   Input,
@@ -14,9 +14,11 @@ import DraggableFlatList, {
 import {v4 as uuidv4} from 'uuid';
 import Icon from 'react-native-vector-icons/Feather';
 import IconEntypo from 'react-native-vector-icons/Entypo';
+import {View} from 'react-native';
+import {useStepsList} from '../../context/StepsListContext';
 
-function TodoList() {
-  const [data, setData] = useState([]);
+function Step1() {
+  const {setStepsListData, stepsListData} = useStepsList();
   const [text, setText] = useState('');
   const handleTextInput = input => {
     setText(input);
@@ -28,20 +30,26 @@ function TodoList() {
       return;
     }
     const key = uuidv4();
-    setData(prevData => {
-      const newItem = {
-        key,
-        todo,
-        isCompleted: false,
-      };
-      return [newItem, ...prevData];
-    });
+
+    setStepsListData(prevState => ({
+      ...prevState,
+      list: [
+        ...(prevState.list ?? {}),
+        {
+          key,
+          todo,
+        },
+      ],
+    }));
     setText('');
   };
 
   const handleDeleteTodo = key => {
-    setData(prevData => prevData.filter(item => item.key !== key));
+    setStepsListData(prevData => prevData.filter(item => item.key !== key));
   };
+  useEffect(() => {
+    console.log(stepsListData);
+  }, [stepsListData]);
 
   const renderItem = ({item, drag, isActive, index}) => {
     return (
@@ -66,9 +74,11 @@ function TodoList() {
           textStyle={{
             color: '#A8B3CF',
           }}>
-          {`${data.findIndex(dataItem => dataItem.key === item.key) + 1}. ${
-            item.todo
-          }`}
+          {`${
+            stepsListData.list.findIndex(
+              dataItem => dataItem.key === item.key,
+            ) + 1
+          }. ${item.todo}`}
         </ListItem>
       </ScaleDecorator>
     );
@@ -91,21 +101,23 @@ function TodoList() {
         <Icon name="info" size={15} color="#FFF" />
       </Box>
       <Flex flexDirection="column" justifyContent="space-between">
-        {data && data.length === 0 && (
+        {stepsListData.list && stepsListData.list?.length === 0 && (
           <Box space="6xl">
             <Text>Lista Vazia</Text>
           </Box>
         )}
-        <DraggableFlatList
-          data={data}
-          onDragEnd={({data}) => setData(data)}
-          keyExtractor={item => item.key}
-          renderItem={renderItem}
-        />
+        <View style={{flex: 1}}>
+          <DraggableFlatList
+            data={stepsListData.list ?? []}
+            onDragEnd={({data}) => setStepsListData(data)}
+            keyExtractor={item => item.key}
+            renderItem={renderItem}
+          />
+        </View>
 
         <Stack horizontalSpace="lg">
           <Box space="6xl">
-            <Text size="lg">{`${data.length} de 25`}</Text>
+            <Text size="lg">{`${stepsListData.list?.length} de 25`}</Text>
           </Box>
           <Input
             style={{backgroundColor: '#1C1F26'}}
@@ -115,20 +127,21 @@ function TodoList() {
             onChangeText={handleTextInput}
             onSubmitEditing={handleAddTodo}
           />
-          <Button
-            textColor={'#1C1F26'}
-            style={{
-              backgroundColor: '#CB3FF4',
-              borderColor: '#CB3FF4',
-            }}
-            disabled={data.length > 25}
-            onPress={() => {}}>
-            Próximo
-          </Button>
+          {stepsListData.list?.length > 2 && (
+            <Button
+              textColor={'#1C1F26'}
+              style={{
+                backgroundColor: '#CB3FF4',
+                borderColor: '#CB3FF4',
+              }}
+              onPress={() => {}}>
+              Próximo
+            </Button>
+          )}
         </Stack>
       </Flex>
     </>
   );
 }
 
-export {TodoList};
+export {Step1};
