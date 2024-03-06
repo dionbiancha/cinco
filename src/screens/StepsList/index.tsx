@@ -2,12 +2,16 @@ import {Step1} from './Step1';
 import HeaderStep from '../../features/HeaderStep';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {StyleSheet} from 'react-native';
+import {useStepsList} from '../../context/StepsListContext';
+import {Step2} from './Step2';
 
 export default function StepsList() {
+  const {stepsListData} = useStepsList();
   return (
     <GestureHandlerRootView style={styles.container}>
       <HeaderStep />
-      <Step1 />
+      {stepsListData.step === 1 && <Step1 />}
+      {stepsListData.step === 2 && <Step2 />}
     </GestureHandlerRootView>
   );
 }

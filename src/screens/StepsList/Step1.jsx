@@ -24,9 +24,9 @@ function Step1() {
     setText(input);
   };
 
-  const handleAddTodo = () => {
-    const todo = text.trim();
-    if (!todo) {
+  const handleAddGoal = () => {
+    const title = text.trim();
+    if (!title) {
       return;
     }
     const key = uuidv4();
@@ -37,14 +37,14 @@ function Step1() {
         ...prevState.list,
         {
           key,
-          todo,
+          title,
         },
       ],
     }));
     setText('');
   };
 
-  const handleDeleteTodo = key => {
+  const handleDeletetitle = key => {
     setStepsListData(prevState => ({
       ...prevState,
       list: prevState.list.filter(item => item.key !== key),
@@ -65,7 +65,7 @@ function Step1() {
           }
           rightIcon={
             <Icon
-              onPress={() => handleDeleteTodo(item.key)}
+              onPress={() => handleDeletetitle(item.key)}
               name="trash-2"
               size={20}
               color="#A8B3CF"
@@ -78,7 +78,7 @@ function Step1() {
             stepsListData.list.findIndex(
               dataItem => dataItem.key === item.key,
             ) + 1
-          }. ${item.todo}`}
+          }. ${item.title}`}
         </ListItem>
       </ScaleDecorator>
     );
@@ -92,8 +92,6 @@ function Step1() {
           alignItems: 'center',
           justifyContent: 'space-between',
           flexDirection: 'row',
-          fontSize: '5px',
-          color: '#FFF',
         }}>
         <Text size="xs" style={{color: '#FFF'}}>
           Escreva suas metas e organize de acordo com a prioridade
@@ -130,7 +128,7 @@ function Step1() {
             outline
             placeholder={'Digite sua meta'}
             onChangeText={handleTextInput}
-            onSubmitEditing={handleAddTodo}
+            onSubmitEditing={handleAddGoal}
           />
           {stepsListData.list?.length > 2 && (
             <Button
@@ -139,7 +137,7 @@ function Step1() {
                 backgroundColor: '#CB3FF4',
                 borderColor: '#CB3FF4',
               }}
-              onPress={() => {}}>
+              onPress={() => setStepsListData({...stepsListData, step: 2})}>
               Próximo
             </Button>
           )}
