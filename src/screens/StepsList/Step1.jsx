@@ -130,7 +130,7 @@ function Step1() {
             onChangeText={handleTextInput}
             onSubmitEditing={handleAddGoal}
           />
-          {stepsListData.list?.length > 2 && (
+          {stepsListData.list?.length > 0 && (
             <Button
               textColor={'#1C1F26'}
               style={{

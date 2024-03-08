@@ -3,6 +3,7 @@ import React, {createContext, useContext, useState, ReactNode} from 'react';
 interface listProps {
   key: string;
   title: string;
+  date?: Date;
 }
 
 interface StepsListProps {
