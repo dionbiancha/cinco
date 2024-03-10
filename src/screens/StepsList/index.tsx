@@ -4,6 +4,7 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {StyleSheet} from 'react-native';
 import {useStepsList} from '../../context/StepsListContext';
 import {Step2} from './Step2';
+import {Step3} from './Step3';
 
 export default function StepsList() {
   const {stepsListData} = useStepsList();
@@ -12,6 +13,7 @@ export default function StepsList() {
       <HeaderStep />
       {stepsListData.step === 1 && <Step1 />}
       {stepsListData.step === 2 && <Step2 />}
+      {stepsListData.step === 3 && <Step3 />}
     </GestureHandlerRootView>
   );
 }

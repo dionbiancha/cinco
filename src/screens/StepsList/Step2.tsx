@@ -6,6 +6,7 @@ import {TouchableWithoutFeedback, View} from 'react-native';
 import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import DatePicker from 'react-native-date-picker';
 import {maskDate} from '../../utils/masks';
+import {ScrollView} from 'react-native-gesture-handler';
 
 function Step2() {
   const {setStepsListData, stepsListData} = useStepsList();
@@ -27,7 +28,7 @@ function Step2() {
         </Text>
         <Icon name="info" size={15} color="#FFF" />
       </Box>
-      <View style={{flex: 1, marginTop: 30}}>
+      <ScrollView style={{flex: 1, marginTop: 30}}>
         {stepsListData.list?.map((e, index) => (
           <TouchableWithoutFeedback
             key={index}
@@ -85,7 +86,7 @@ function Step2() {
             setOpen(false);
           }}
         />
-      </View>
+      </ScrollView>
       {
         // Verifica se todos os elementos do array "list" possuem a propriedade "date" preenchida
         stepsListData.list.every(item => item.date) && (
@@ -95,7 +96,7 @@ function Step2() {
               backgroundColor: '#CB3FF4',
               borderColor: '#CB3FF4',
             }}
-            onPress={() => setStepsListData({...stepsListData, step: 2})}>
+            onPress={() => setStepsListData({...stepsListData, step: 3})}>
             Próximo
           </Button>
         )

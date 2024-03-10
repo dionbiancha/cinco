@@ -1,9 +1,15 @@
 import React, {createContext, useContext, useState, ReactNode} from 'react';
 
+interface GoalsProps {
+  title: string;
+  date: Date;
+}
+
 interface listProps {
   key: string;
   title: string;
   date?: Date;
+  goals?: GoalsProps[];
 }
 
 interface StepsListProps {
