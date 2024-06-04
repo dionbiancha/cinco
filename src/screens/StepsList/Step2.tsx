@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {Box, Button, Flex, Text} from 'react-native-design-system';
 import Icon from 'react-native-vector-icons/Feather';
 import {useStepsList} from '../../context/StepsListContext';
-import {TouchableWithoutFeedback, View} from 'react-native';
+import {TouchableWithoutFeedback} from 'react-native';
 import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import DatePicker from 'react-native-date-picker';
 import {maskDate} from '../../utils/masks';

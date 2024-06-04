@@ -3,6 +3,7 @@ import React, {createContext, useContext, useState, ReactNode} from 'react';
 interface GoalsProps {
   title: string;
   date: Date;
+  repeat?: string[];
 }
 
 interface listProps {
