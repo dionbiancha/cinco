@@ -2,13 +2,20 @@ import React, {useState} from 'react';
 import {Box, Button, Flex, Input, Text} from 'react-native-design-system';
 import {useStepsList} from '../../context/StepsListContext';
 import {Modal, StyleSheet, TouchableWithoutFeedback, View} from 'react-native';
-import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import DatePicker from 'react-native-date-picker';
 import {maskDate} from '../../utils/masks';
 import Icon from 'react-native-vector-icons/Feather';
 import {ScrollView} from 'react-native-gesture-handler';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {RootStackParamList} from '../../../App';
+import {TextInput} from 'react-native-paper';
+
+export function hasRepeat(repeat: string[] | undefined) {
+  return repeat && repeat?.length > 0;
+}
 
 function Step3() {
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const {setStepsListData, stepsListData} = useStepsList();
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState<Date>();
@@ -49,13 +56,10 @@ function Step3() {
   };
 
   function hasGoals() {
-    return stepsListData.list.some(
-      item => item.goals && item?.goals.length > 0,
-    );
-  }
-
-  function hasRepeat(repeat: string[] | undefined) {
-    return repeat && repeat?.length > 0;
+    console.log(stepsListData.list);
+    return stepsListData.list
+      .slice(0, 5)
+      .some(item => item.goals && item?.goals.length > 0);
   }
 
   function isEnabled(value: string) {
@@ -100,92 +104,107 @@ function Step3() {
           flexDirection: 'row',
         }}>
         <Text size="xs" style={{color: '#FFF'}}>
-          Defina os objetivos para atingir cada meta
+          Defina os objetivos que deve cumprir para atingir cada meta
         </Text>
-        <Icon name="info" size={15} color="#FFF" />
       </Box>
       <ScrollView style={{flex: 1, marginTop: 30}}>
-        {stepsListData.list?.map((e, index) => (
-          <TouchableWithoutFeedback
-            key={index}
-            onPress={() => {
-              setModalVisible(true);
-              setSelectItem(index);
-            }}>
-            <Flex
-              flexDirection="column"
-              alignItems="center"
-              style={{paddingBottom: 30}}>
-              <Flex
-                style={{marginBottom: 40}}
-                flexDirection="row"
-                justifyContent="center"
-                alignItems="flex-start">
-                <Text style={{fontSize: 50, lineHeight: 60, marginRight: 20}}>
-                  {index + 1}
-                </Text>
-                <Flex flexDirection="column" justifyContent="center">
+        {stepsListData.list?.map(
+          (e, index) =>
+            index <= 4 && (
+              <TouchableWithoutFeedback
+                key={index}
+                onPress={() => {
+                  setModalVisible(true);
+                  setSelectItem(index);
+                }}>
+                <Flex
+                  flexDirection="column"
+                  alignItems="center"
+                  style={{paddingBottom: 30}}>
                   <Flex
+                    style={{marginBottom: 40}}
                     flexDirection="row"
-                    justifyContent="space-between"
-                    alignItems="center">
-                    <Text size="lg" style={{color: '#A8B3CF'}}>
-                      {e.title}
+                    justifyContent="center"
+                    alignItems="flex-start">
+                    <Text
+                      style={{fontSize: 50, lineHeight: 60, marginRight: 20}}>
+                      {index + 1}
                     </Text>
-                  </Flex>
-                  <Text size="sm" style={{color: '#A8B3CF'}}>
-                    {maskDate(e.date) ?? 'Selecione uma data'}
-                  </Text>
-                  {e.goals?.map((goal, key) => (
-                    <Flex
-                      style={{marginTop: 20}}
-                      key={key}
-                      flexDirection="column">
-                      <Text style={{color: '#A8B3CF'}}>{goal.title}</Text>
-                      <Text style={{color: '#A8B3CF'}}>
-                        Prazo até {maskDate(goal.date)}
+                    <Flex flexDirection="column" justifyContent="center">
+                      <Flex
+                        flexDirection="row"
+                        justifyContent="space-between"
+                        alignItems="center">
+                        <Text size="lg" style={{color: '#A8B3CF'}}>
+                          {e.title}
+                        </Text>
+                      </Flex>
+                      <Text size="sm" style={{color: '#A8B3CF'}}>
+                        {maskDate(e.date) ?? 'Selecione uma data'}
                       </Text>
-
-                      <Box
-                        style={{
-                          display: hasRepeat(goal?.repeat) ? 'flex' : 'none',
-                          flexDirection: 'row',
-                          justifyContent: 'space-between',
-                          width: '100%',
-                          padding: 0,
-                          marginTop: 10,
-                        }}>
-                        <Text style={{color: '#A8B3CF'}}>Retepe</Text>
-                        <Box
-                          style={{
-                            display: 'flex',
-                            flexDirection: 'row',
-                            padding: 0,
-                          }}>
-                          {days.map((day, index) => (
-                            <Text
-                              style={{
-                                textTransform: 'uppercase',
-                                marginLeft: 10,
-                                fontSize: 15,
-                                color: goal.repeat?.includes(day)
-                                  ? '#CB3FF4'
-                                  : '#A8B3CF',
-                              }}
-                              key={index}>
-                              {day.charAt(0)}
+                      {e.goals?.map((goal, key) => (
+                        <Flex
+                          flexDirection="row"
+                          justifyContent="space-between"
+                          alignItems="center"
+                          key={key}
+                          style={{marginBottom: 30}}>
+                          <Flex style={{marginTop: 20}} flexDirection="column">
+                            <Text style={{color: '#A8B3CF'}}>{goal.title}</Text>
+                            <Text style={{color: '#A8B3CF'}}>
+                              Prazo até {maskDate(goal.date)}
                             </Text>
-                          ))}
-                        </Box>
-                      </Box>
+
+                            <Box
+                              style={{
+                                display: hasRepeat(goal?.repeat)
+                                  ? 'flex'
+                                  : 'none',
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                width: '100%',
+                                padding: 0,
+                                marginTop: 10,
+                              }}>
+                              <Text style={{color: '#A8B3CF'}}>Retepe</Text>
+                              <Box
+                                style={{
+                                  display: 'flex',
+                                  flexDirection: 'row',
+                                  padding: 0,
+                                }}>
+                                {days.map((day, index) => (
+                                  <Text
+                                    style={{
+                                      textTransform: 'uppercase',
+                                      marginLeft: 10,
+                                      fontSize: 15,
+                                      color: goal.repeat?.includes(day)
+                                        ? '#1976D2'
+                                        : '#A8B3CF',
+                                    }}
+                                    key={index}>
+                                    {day.charAt(0)}
+                                  </Text>
+                                ))}
+                              </Box>
+                            </Box>
+                          </Flex>
+                          <Icon
+                            onPress={() => handleDeleteGoal(selectItem, key)}
+                            name="trash-2"
+                            size={20}
+                            color="#A8B3CF"
+                          />
+                        </Flex>
+                      ))}
                     </Flex>
-                  ))}
+                  </Flex>
+                  {!e.goals && <Text>Nenhum objetivo adicionado</Text>}
                 </Flex>
-              </Flex>
-              {!e.goals && <Text>Nenhum objetivo adicionado</Text>}
-            </Flex>
-          </TouchableWithoutFeedback>
-        ))}
+              </TouchableWithoutFeedback>
+            ),
+        )}
         <DatePicker
           modal
           mode="date"
@@ -200,104 +219,62 @@ function Step3() {
           }}
         />
       </ScrollView>
+
       <Modal
         animationType="slide"
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {
-          setModalVisible(!modalVisible);
+          setModalVisible(false);
         }}>
-        <Box style={styles.modalView}>
-          <Flex
-            flexDirection="row"
-            style={{width: '100%', marginBottom: 30}}
-            justifyContent="space-between"
-            alignItems="flex-start">
-            <View />
-            <Text size="md" style={{color: '#A8B3CF'}}>
-              Objetivos
-            </Text>
-            <IconAntDesign
-              onPress={() => {
-                setModalVisible(!modalVisible);
-              }}
-              name="close"
-              size={20}
-              color="#A8B3CF"
-            />
-          </Flex>
-          <ScrollView
+        <View style={styles.modalView}>
+          <TextInput
+            theme={{
+              colors: {
+                onSurfaceVariant: '#a8b3cf58',
+              },
+            }}
             style={{
-              width: '100%',
-            }}>
-            {!stepsListData.list[selectItem].goals ? (
-              <Text>Nenhum objetivo adicionado</Text>
-            ) : (
-              stepsListData.list[selectItem].goals?.map((goal, index) => (
-                <Flex
-                  flexDirection="row"
-                  justifyContent="space-between"
-                  key={index}
-                  style={{marginBottom: 30}}>
-                  <Flex flexDirection="column">
-                    <Text style={{color: '#A8B3CF'}}>{goal.title}</Text>
-                    <Text style={{color: '#A8B3CF'}}>
-                      Prazo até {maskDate(goal.date)}
-                    </Text>
-
-                    <Box
-                      style={{
-                        display: hasRepeat(goal.repeat) ? 'flex' : 'none',
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        width: '100%',
-                        padding: 0,
-                        marginTop: 10,
-                      }}>
-                      <Text style={{color: '#A8B3CF'}}>Retepe</Text>
-                      <Box
-                        style={{
-                          display: 'flex',
-                          flexDirection: 'row',
-                          padding: 0,
-                        }}>
-                        {days.map((day, index) => (
-                          <Text
-                            style={{
-                              textTransform: 'uppercase',
-                              marginLeft: 10,
-                              fontSize: 15,
-                              color: goal.repeat?.includes(day)
-                                ? '#CB3FF4'
-                                : '#A8B3CF',
-                            }}
-                            key={index}>
-                            {day.charAt(0)}
-                          </Text>
-                        ))}
-                      </Box>
-                    </Box>
-                  </Flex>
-                  <Icon
-                    onPress={() => handleDeleteGoal(selectItem, index)}
-                    name="trash-2"
-                    size={20}
-                    color="#A8B3CF"
-                  />
-                </Flex>
-              ))
-            )}
-          </ScrollView>
-
-          <Input
-            style={{backgroundColor: '#1C1F26', width: '100%'}}
+              backgroundColor: '#1C1F26',
+              marginBottom: 20,
+            }}
+            mode="outlined"
+            textColor="#fff"
+            outlineColor="#a8b3cf58"
+            outlineStyle={{borderWidth: 1}}
+            activeOutlineColor="#a8b3cf58"
+            label="Nome"
+            placeholderTextColor="#a8b3cf58"
             value={text}
-            outline
-            placeholder={'Digite seu objetivo'}
-            onChangeText={handleTextInput}
+            placeholder={'Ex: Estudar 1h por dia'}
+            onChangeText={e => handleTextInput(e)}
           />
+          <TextInput
+            theme={{
+              colors: {
+                onSurfaceVariant: '#a8b3cf58',
+                surfaceVariant: '#FFF',
+              },
+            }}
+            style={{backgroundColor: '#1C1F26', marginBottom: 20}}
+            mode="outlined"
+            textColor="#fff"
+            outlineColor="#a8b3cf58"
+            placeholderTextColor="#a8b3cf58"
+            outlineStyle={{borderWidth: 1}}
+            activeOutlineColor="#a8b3cf58"
+            label="Questão"
+            value={''}
+            placeholder={'Ex: Você estudou hoje?'}
+            onChangeText={() => {}}
+          />
+
           <Input
-            style={{backgroundColor: '#1C1F26', width: '100%', marginTop: 10}}
+            label={'Freqüência'}
+            style={{
+              backgroundColor: '#1C1F26',
+              width: '100%',
+            }}
             value={maskDate(date) ?? ''}
             outline
             placeholder={'Selecione uma data'}
@@ -325,7 +302,7 @@ function Step3() {
                     textTransform: 'uppercase',
                     marginLeft: 10,
                     fontSize: 20,
-                    color: isEnabled(day) ? '#CB3FF4' : '#A8B3CF',
+                    color: isEnabled(day) ? '#1976D2' : '#A8B3CF',
                   }}
                   onPress={() => {
                     console.log(repeate);
@@ -345,8 +322,8 @@ function Step3() {
             <Button
               textColor={'#1C1F26'}
               style={{
-                backgroundColor: '#CB3FF4',
-                borderColor: '#CB3FF4',
+                backgroundColor: '#1976D2',
+                borderColor: '#1976D2',
                 marginTop: 10,
                 width: '100%',
               }}
@@ -354,16 +331,19 @@ function Step3() {
               Adicionar
             </Button>
           )}
-        </Box>
+        </View>
       </Modal>
+
       {hasGoals() && (
         <Button
           textColor={'#1C1F26'}
           style={{
-            backgroundColor: '#CB3FF4',
-            borderColor: '#CB3FF4',
+            backgroundColor: '#1976D2',
+            borderColor: '#1976D2',
           }}
-          onPress={() => setStepsListData({...stepsListData, step: 2})}>
+          onPress={() => {
+            navigation.navigate('Home');
+          }}>
           Próximo
         </Button>
       )}
@@ -378,9 +358,9 @@ function Step3() {
 
 const styles = StyleSheet.create({
   modalView: {
-    flex: 1,
-    backgroundColor: '#2D323C',
+    backgroundColor: '#1C1F26',
     padding: 30,
+    flex: 1,
   },
 });
 

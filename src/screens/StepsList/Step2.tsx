@@ -24,48 +24,50 @@ function Step2() {
           flexDirection: 'row',
         }}>
         <Text size="xs" style={{color: '#FFF'}}>
-          Defina os prazos para cada meta
+          Até quando deve atinger essa meta?
         </Text>
-        <Icon name="info" size={15} color="#FFF" />
       </Box>
       <ScrollView style={{flex: 1, marginTop: 30}}>
-        {stepsListData.list?.map((e, index) => (
-          <TouchableWithoutFeedback
-            key={index}
-            onPress={() => {
-              setSelectItem(index);
+        {stepsListData.list?.map(
+          (e, index) =>
+            index <= 4 && (
+              <TouchableWithoutFeedback
+                key={index}
+                onPress={() => {
+                  setSelectItem(index);
 
-              setOpen(true);
-            }}>
-            <Flex
-              style={{maxHeight: 50, marginBottom: 40}}
-              flexDirection="row"
-              justifyContent="center"
-              alignItems="center">
-              <Text style={{fontSize: 50, lineHeight: 60, marginRight: 20}}>
-                {index + 1}
-              </Text>
-              <Flex flexDirection="column" justifyContent="center">
+                  setOpen(true);
+                }}>
                 <Flex
+                  style={{maxHeight: 50, marginBottom: 40}}
                   flexDirection="row"
-                  justifyContent="space-between"
+                  justifyContent="center"
                   alignItems="center">
-                  <Text size="lg" style={{color: '#A8B3CF'}}>
-                    {e.title}
+                  <Text style={{fontSize: 50, lineHeight: 60, marginRight: 20}}>
+                    {index + 1}
                   </Text>
-                  <IconMaterialIcons
-                    name="date-range"
-                    size={20}
-                    color="#A8B3CF"
-                  />
+                  <Flex flexDirection="column" justifyContent="center">
+                    <Flex
+                      flexDirection="row"
+                      justifyContent="space-between"
+                      alignItems="center">
+                      <Text size="lg" style={{color: '#A8B3CF'}}>
+                        {e.title}
+                      </Text>
+                      <IconMaterialIcons
+                        name="date-range"
+                        size={20}
+                        color="#A8B3CF"
+                      />
+                    </Flex>
+                    <Text size="sm" style={{color: '#A8B3CF'}}>
+                      {maskDate(e.date) ?? 'Selecione uma data'}
+                    </Text>
+                  </Flex>
                 </Flex>
-                <Text size="sm" style={{color: '#A8B3CF'}}>
-                  {maskDate(e.date) ?? 'Selecione uma data'}
-                </Text>
-              </Flex>
-            </Flex>
-          </TouchableWithoutFeedback>
-        ))}
+              </TouchableWithoutFeedback>
+            ),
+        )}
         <DatePicker
           modal
           mode="date"
@@ -89,12 +91,12 @@ function Step2() {
       </ScrollView>
       {
         // Verifica se todos os elementos do array "list" possuem a propriedade "date" preenchida
-        stepsListData.list.every(item => item.date) && (
+        stepsListData.list.slice(0, 5).every(item => item.date) && (
           <Button
             textColor={'#1C1F26'}
             style={{
-              backgroundColor: '#CB3FF4',
-              borderColor: '#CB3FF4',
+              backgroundColor: '#1976D2',
+              borderColor: '#1976D2',
             }}
             onPress={() => setStepsListData({...stepsListData, step: 3})}>
             Próximo

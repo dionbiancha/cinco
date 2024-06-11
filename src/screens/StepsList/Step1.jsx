@@ -94,9 +94,8 @@ function Step1() {
           flexDirection: 'row',
         }}>
         <Text size="xs" style={{color: '#FFF'}}>
-          Escreva suas metas e organize de acordo com a prioridade
+          Escreva suas metas e as organize de acordo com a sua prioridade
         </Text>
-        <Icon name="info" size={15} color="#FFF" />
       </Box>
       <Flex flexDirection="column" justifyContent="space-between">
         {stepsListData.list && stepsListData.list?.length === 0 && (
@@ -130,12 +129,12 @@ function Step1() {
             onChangeText={handleTextInput}
             onSubmitEditing={handleAddGoal}
           />
-          {stepsListData.list?.length > 0 && (
+          {stepsListData.list?.length >= 5 && (
             <Button
               textColor={'#1C1F26'}
               style={{
-                backgroundColor: '#CB3FF4',
-                borderColor: '#CB3FF4',
+                backgroundColor: '#1976D2',
+                borderColor: '#1976D2',
               }}
               onPress={() => setStepsListData({...stepsListData, step: 2})}>
               Próximo
